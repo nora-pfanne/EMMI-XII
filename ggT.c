@@ -157,8 +157,14 @@ unsigned int ggT3(unsigned int m, unsigned int n){
 			// m gerade und n gerade	
 			} else {
 				
-				n = n / 2;
-				m = m / 2;
+				if(m > n) {
+			
+					m = m - n;
+					
+				} else {
+			
+					n = n - m;
+				}
 			}
 		}
 	}
@@ -170,10 +176,13 @@ unsigned int ggT3(unsigned int m, unsigned int n){
 unsigned int ggT3_rekursiv(unsigned int m, unsigned int n) {
 	
 	// Abbruchbedingung
-	if (m == n) {
+	if (m == n || m == 0 || n == 0) {
 		
 		return m;
 		
+	} else if (m == 1 || n == 1) {
+		
+		return 1;
 	}
 		
 	 else if(m%2 != 0) {
