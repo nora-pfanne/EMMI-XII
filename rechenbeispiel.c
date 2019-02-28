@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 int main(void) {
 	
 	//Variablendeklarierung
@@ -9,9 +11,19 @@ int main(void) {
 	
 	k = m + n;
 	
+	// while-Schleife
+	
+	l = 1;
+	
+	while(l<=15) {
+		
+		printf("l = %u",l);
+		l = l + 2;
+	}
+	
 	// Ausgabe in der Konsole
-	// format specifier %d
-	printf("k = %d", k); 
+	// format specifier %u
+	printf("k = %u", k); 
 	//Ausgabe: k = 54
 	
 	return 0;
