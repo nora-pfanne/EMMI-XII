@@ -15,6 +15,13 @@ int main(void){
 	printf("Die %u-te Fibunacci-Zahl (rekursiv) ist %u\n", n, fibunacci_recursive(n));
 	printf("Die rekursive Funktion wurde %d mal durchlaufen\n", counter(0));
 	
+	for(unsigned int i = 1; i <= n; i = i + 1){
+		for(unsigned int j = 1; j <= n; j = j + 1){
+			printf("%3u ", i+j);
+		}
+		printf("\n");
+	}
+	
 	return 0;
 }
 
