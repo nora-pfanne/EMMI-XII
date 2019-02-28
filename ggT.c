@@ -10,10 +10,12 @@ unsigned int ggT2_rekursiv(unsigned int m, unsigned int n);
 unsigned int ggT3(unsigned int m, unsigned int n);				/*binär*/
 unsigned int ggT3_rekursiv(unsigned int m, unsigned int n);
 
+int counter(int counter);										/*Counter*/
+
 int main(void) {
 	
 	// Deklaration der Variablen m und n
-	unsigned int m, n;
+	unsigned int m, n, temp;
 	
 	// Eingabe vcn m und n durch den User
 	printf("Gib hier die erste Zahl ein: \n");
@@ -21,6 +23,35 @@ int main(void) {
 	
 	printf("Gib hier die zweite Zahl ein: \n");
 	scanf("%u/n", &n);
+
+	// Analyse der Anzahl von Funktionsaufrufen bei ggT1_rekursiv
+	for(unsigned int i = 33; i <= 56; i = i + 1){
+		for(unsigned int j = 33; j <= 56; j = j + 1){
+			
+			temp = counter(0);
+			counter(-temp);
+			
+			ggT1_rekursiv(i,j);
+			printf("%3d", counter(0));
+			
+		}
+		printf("\n");
+	}
+	
+	// Analyse der Anzahl von Funktionsaufrufen bei ggT2_rekursiv
+	for(unsigned int i = 33; i <= 56; i = i + 1){
+		for(unsigned int j = 33; j <= 56; j = j + 1){
+			
+			temp = counter(0);
+			counter(-temp);
+			
+			ggT2_rekursiv(i,j);
+			printf("%3d", counter(0));
+			
+		}
+		printf("\n");
+	}
+	
 	
 	// Methodenaufruf und Ergebnisausgabe
 	printf("Der ggT von %u und %u ist %u\n", m, n, ggT1(m,n));
@@ -40,13 +71,8 @@ unsigned int ggT1(unsigned int m, unsigned int n) {
 	
 	// Überprüfung, ob es sich um die selbe Zahl handelt
 	while(m != n) {
-		
-		// Ausnahme: Ein Paramater ist 0
-		if(n == 0 || m == 0) {
-			
-			return 0;
 	
-		} else if(m > n) {
+		if(m > n) {
 			
 			m = m - n;
 		} else {
@@ -61,12 +87,8 @@ unsigned int ggT1(unsigned int m, unsigned int n) {
 // Klassischer Algorithmus rekursiv
 unsigned int ggT1_rekursiv(unsigned int m, unsigned int n){
 	
-	// Ausnahme: Ein Paramater ist 0
-	if(m == 0 || n == 0){
-		
-		return 0;
-	}
-	
+	counter(1);
+
 	//Abbruchbedingung
 	if(m == n) {
 		
@@ -88,13 +110,7 @@ unsigned int ggT1_rekursiv(unsigned int m, unsigned int n){
 unsigned int ggT2(unsigned int m, unsigned int n) {
 	
 	// Variabel für den Tausch von m und n
-	unsigned int temp;
-	
-	// Ausnahme: Ein Paramater ist 0
-	if(m == 0 || n == 0){
-		
-		return 0;
-	}	
+	unsigned int temp;	
 	
 	while(n != 0) {
 		
@@ -109,15 +125,21 @@ unsigned int ggT2(unsigned int m, unsigned int n) {
 // Verbesserter Algorithmus rekursiv
 unsigned int ggT2_rekursiv(unsigned int m, unsigned int n){
 	
+	unsigned int r;
+	
+	counter(1);
+	
+	r = m%n;
+	
 	// Abbruchbedingung
-	if(n == 0) {
+	if(r == 0) {
 		
-		return m;
+		return n;
 		
 	// Algorithmus
 	} else {
 		
-		return ggT2_rekursiv(n, m%n);
+		return ggT2_rekursiv(n, r);
 	}
 }
 
@@ -176,16 +198,16 @@ unsigned int ggT3(unsigned int m, unsigned int n){
 unsigned int ggT3_rekursiv(unsigned int m, unsigned int n) {
 	
 	// Abbruchbedingung
-	if (m == n || m == 0 || n == 0) {
+	if (m == n) {
 		
 		return m;
 		
+	// Sonderfall: Ein Paramater ist 1	
 	} else if (m == 1 || n == 1) {
 		
 		return 1;
-	}
 		
-	 else if(m%2 != 0) {
+	} else if(m%2 != 0) {
 		
 		// m ist ungerade und n ist ungerade
 		if(n%2 != 0) {
@@ -216,4 +238,13 @@ unsigned int ggT3_rekursiv(unsigned int m, unsigned int n) {
 			return 2 * ggT3_rekursiv(m/2, n/2);
 		}
 	}
+}
+
+int counter(int counter){
+	
+	static int sum = 0;
+	
+	sum = sum + counter;
+	
+	return sum;
 }
