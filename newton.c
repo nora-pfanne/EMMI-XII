@@ -23,7 +23,7 @@ double f(double x){
 
 double f_prime(double x){
 	
-	//double y = exp(log((1+x) * 0.5)) * (x/(2 * (1+x)) + 0.5 * log(1+x)) - exp(log(x * sqrt(1+x))) * (sqrt(1+x)/x + log(x) / (2*sqrt(1+x)))
+
 	double y = 2*x;
 	
 	return y;
@@ -31,7 +31,6 @@ double f_prime(double x){
 
 double newton_correction(double x){
 	
-	//double y = exp(log(sqrt(1+x) )* x))- exp(log(x )* sqrt(1+x)));
 	
 	double a_1 = 1 + x;
 	double a_2 = sqrt(a_1);

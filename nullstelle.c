@@ -49,7 +49,7 @@ double nullstelle(double a, double b){
 		}
 	}
 	
-	return a;
+	return (a+b)/2;
 }
 
 double f(double x){
