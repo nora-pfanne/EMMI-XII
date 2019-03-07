@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 
 struct Rational {
 	
@@ -16,11 +17,16 @@ Rational Rational_Diff(Rational, Rational);
 Rational Rational_Mult(Rational, Rational);
 Rational Rational_Div(Rational, Rational);
 Rational Rational_Red(Rational);
+Rational Rational_Zero(void);
+Rational Rational_set(unsigned char, unsigned int, unsigned int);
 unsigned int abs(int);
 unsigned int ggT1(unsigned int m, unsigned int n);
+Rational phi_horner(double x, unsigned int n);
+double Rational_double(Rational rational);
 
 int main(void){
 	
+	/*
 	Rational x = {0, 1, 6};
 	Rational y = {1, 4, 6};
 		
@@ -38,6 +44,10 @@ int main(void){
 	
 	printf("Der Quotient von x und y ist: ");
 	Rational_Print(Rational_Div(x, y));
+	*/
+	
+	Rational_Print(phi_horner(1.0, 12));
+	printf("\n %lf", Rational_double(phi_horner(1.0, 12)));
 	
 	return 0;
 }
@@ -153,6 +163,20 @@ Rational Rational_Red(Rational x){
 	return rational;
 }
 
+Rational Rational_set(unsigned char s, unsigned int p, unsigned int q){
+  Rational z;
+  unsigned int g;
+  
+  assert (q > 0);
+  assert ((s == 1) || (s == 0));
+  
+  if (p == 0) {z = Rational_Zero();}
+  else {
+    g = ggT1(p, q);
+    z.s = s; z.p = p/g; z.q = q/g;
+  }
+  return z;
+}
 
 // Klassischer Euklid-Algorithmus
 unsigned int ggT1(unsigned int m, unsigned int n) {
@@ -182,4 +206,32 @@ unsigned int abs(int x){
 		
 		return x;
 	}
+}
+
+Rational phi_horner(double x, unsigned int n){
+	
+	assert(x >= 0.0 && x <= 1.0);
+	
+	Rational erg = Rational_set(0, x, n);
+	
+	for(unsigned int i = (n-1); i > 0; i--){
+		
+		//erg = erg * x/i +1;
+		erg = Rational_Sum((Rational_Mult(erg, Rational_set(0, x, i))), Rational_set(0, 1, 1));
+		
+	}
+	
+	return erg;
+}
+
+Rational Rational_Zero(void){  
+  
+  Rational z;
+  z.s = 0; z.p = 0; z.q = 1;
+  return z;
+}
+
+double Rational_double(Rational rational){
+	
+	return 1.0*rational.p / rational.q;
 }
