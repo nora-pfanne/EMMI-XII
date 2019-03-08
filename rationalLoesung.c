@@ -12,7 +12,6 @@ Rational Rational_set(unsigned char, unsigned int, unsigned int);
 Rational Rational_Zero(void);
 Rational Rational_One(void);
 Rational Rational_setInteger(int);
-
 Rational Rational_Sum (Rational, Rational);
 Rational Rational_Diff (Rational, Rational);
 Rational Rational_Mult (Rational, Rational);

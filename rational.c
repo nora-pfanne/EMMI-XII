@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
+#include <stdint.h>
 
 struct Rational {
 	
 	unsigned char s;
-	unsigned int p;
-	unsigned int q;
+	uint64_t p;
+	uint64_t q;
 };
 
 typedef struct Rational Rational;
@@ -18,10 +19,10 @@ Rational Rational_Mult(Rational, Rational);
 Rational Rational_Div(Rational, Rational);
 Rational Rational_Red(Rational);
 Rational Rational_Zero(void);
-Rational Rational_set(unsigned char, unsigned int, unsigned int);
-unsigned int abs(int);
-unsigned int ggT1(unsigned int m, unsigned int n);
-Rational phi_horner(double x, unsigned int n);
+Rational Rational_set(unsigned char, uint64_t, uint64_t);
+uint64_t abs(int);
+uint64_t ggT1(uint64_t m, uint64_t n);
+Rational phi_horner(double x, uint64_t n);
 double Rational_double(Rational rational);
 
 int main(void){
@@ -68,7 +69,7 @@ Rational Rational_Sum(Rational x, Rational y){
 	
 	unsigned char s;
 	int p, v;
-	unsigned int zaehler;
+	uint64_t zaehler;
 	
 	
 	if(x.s == 0){
@@ -134,8 +135,8 @@ Rational Rational_Diff(Rational x, Rational y){
 Rational Rational_Mult(Rational x, Rational y){
 	
 	unsigned char s = x.s * y.s;
-	unsigned int p = x.p * y.p;
-	unsigned int q = x.q * y.q;
+	uint64_t p = x.p * y.p;
+	uint64_t q = x.q * y.q;
 	
 	Rational rational = {s, p, q};
 	
@@ -153,19 +154,19 @@ Rational Rational_Div(Rational x, Rational y){
 
 Rational Rational_Red(Rational x){
 	
-	unsigned int teiler = ggT1(x.p, x.q);
+	uint64_t teiler = ggT1(x.p, x.q);
 	
-	unsigned int p = x.p/teiler;
-	unsigned int q = x.q/teiler;
+	uint64_t p = x.p/teiler;
+	uint64_t q = x.q/teiler;
 	
 	Rational rational = {x.s, p, q};
 	
 	return rational;
 }
 
-Rational Rational_set(unsigned char s, unsigned int p, unsigned int q){
+Rational Rational_set(unsigned char s, uint64_t p, uint64_t q){
   Rational z;
-  unsigned int g;
+  uint64_t g;
   
   assert (q > 0);
   assert ((s == 1) || (s == 0));
@@ -179,7 +180,7 @@ Rational Rational_set(unsigned char s, unsigned int p, unsigned int q){
 }
 
 // Klassischer Euklid-Algorithmus
-unsigned int ggT1(unsigned int m, unsigned int n) {
+uint64_t ggT1(uint64_t m, uint64_t n) {
 	
 	// Überprüfung, ob es sich um die selbe Zahl handelt
 	while(m != n) {
@@ -196,7 +197,7 @@ unsigned int ggT1(unsigned int m, unsigned int n) {
 	return m;
 }	
 
-unsigned int abs(int x){
+uint64_t abs(int x){
 	
 	if(x < 0){
 		
@@ -208,13 +209,13 @@ unsigned int abs(int x){
 	}
 }
 
-Rational phi_horner(double x, unsigned int n){
+Rational phi_horner(double x, uint64_t n){
 	
 	assert(x >= 0.0 && x <= 1.0);
 	
 	Rational erg = Rational_set(0, x, n);
 	
-	for(unsigned int i = (n-1); i > 0; i--){
+	for(uint64_t i = (n-1); i > 0; i--){
 		
 		//erg = erg * x/i +1;
 		erg = Rational_Sum((Rational_Mult(erg, Rational_set(0, x, i))), Rational_set(0, 1, 1));
