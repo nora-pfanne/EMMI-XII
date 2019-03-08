@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
+#include <stdint.h>
 
 struct Rational {
 	
 	unsigned char s;
-	unsigned int p;
-	unsigned int q;
+	uint64_t p;
+	uint64_t q;
 };
 
 typedef struct Rational Rational;
@@ -16,11 +18,16 @@ Rational Rational_Diff(Rational, Rational);
 Rational Rational_Mult(Rational, Rational);
 Rational Rational_Div(Rational, Rational);
 Rational Rational_Red(Rational);
-unsigned int abs(int);
-unsigned int ggT1(unsigned int m, unsigned int n);
+Rational Rational_Zero(void);
+Rational Rational_set(unsigned char, uint64_t, uint64_t);
+uint64_t abs(int);
+uint64_t ggT1(uint64_t m, uint64_t n);
+Rational phi_horner(double x, uint64_t n);
+double Rational_double(Rational rational);
 
 int main(void){
 	
+	/*
 	Rational x = {0, 1, 6};
 	Rational y = {1, 4, 6};
 		
@@ -38,6 +45,10 @@ int main(void){
 	
 	printf("Der Quotient von x und y ist: ");
 	Rational_Print(Rational_Div(x, y));
+	*/
+	
+	Rational_Print(phi_horner(1.0, 12));
+	printf("\n %lf", Rational_double(phi_horner(1.0, 12)));
 	
 	return 0;
 }
@@ -58,7 +69,7 @@ Rational Rational_Sum(Rational x, Rational y){
 	
 	unsigned char s;
 	int p, v;
-	unsigned int zaehler;
+	uint64_t zaehler;
 	
 	
 	if(x.s == 0){
@@ -124,8 +135,8 @@ Rational Rational_Diff(Rational x, Rational y){
 Rational Rational_Mult(Rational x, Rational y){
 	
 	unsigned char s = x.s * y.s;
-	unsigned int p = x.p * y.p;
-	unsigned int q = x.q * y.q;
+	uint64_t p = x.p * y.p;
+	uint64_t q = x.q * y.q;
 	
 	Rational rational = {s, p, q};
 	
@@ -143,19 +154,33 @@ Rational Rational_Div(Rational x, Rational y){
 
 Rational Rational_Red(Rational x){
 	
-	unsigned int teiler = ggT1(x.p, x.q);
+	uint64_t teiler = ggT1(x.p, x.q);
 	
-	unsigned int p = x.p/teiler;
-	unsigned int q = x.q/teiler;
+	uint64_t p = x.p/teiler;
+	uint64_t q = x.q/teiler;
 	
 	Rational rational = {x.s, p, q};
 	
 	return rational;
 }
 
+Rational Rational_set(unsigned char s, uint64_t p, uint64_t q){
+  Rational z;
+  uint64_t g;
+  
+  assert (q > 0);
+  assert ((s == 1) || (s == 0));
+  
+  if (p == 0) {z = Rational_Zero();}
+  else {
+    g = ggT1(p, q);
+    z.s = s; z.p = p/g; z.q = q/g;
+  }
+  return z;
+}
 
 // Klassischer Euklid-Algorithmus
-unsigned int ggT1(unsigned int m, unsigned int n) {
+uint64_t ggT1(uint64_t m, uint64_t n) {
 	
 	// Überprüfung, ob es sich um die selbe Zahl handelt
 	while(m != n) {
@@ -172,7 +197,7 @@ unsigned int ggT1(unsigned int m, unsigned int n) {
 	return m;
 }	
 
-unsigned int abs(int x){
+uint64_t abs(int x){
 	
 	if(x < 0){
 		
@@ -182,4 +207,32 @@ unsigned int abs(int x){
 		
 		return x;
 	}
+}
+
+Rational phi_horner(double x, uint64_t n){
+	
+	assert(x >= 0.0 && x <= 1.0);
+	
+	Rational erg = Rational_set(0, x, n);
+	
+	for(uint64_t i = (n-1); i > 0; i--){
+		
+		//erg = erg * x/i +1;
+		erg = Rational_Sum((Rational_Mult(erg, Rational_set(0, x, i))), Rational_set(0, 1, 1));
+		
+	}
+	
+	return erg;
+}
+
+Rational Rational_Zero(void){  
+  
+  Rational z;
+  z.s = 0; z.p = 0; z.q = 1;
+  return z;
+}
+
+double Rational_double(Rational rational){
+	
+	return 1.0*rational.p / rational.q;
 }

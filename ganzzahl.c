@@ -59,7 +59,9 @@ int main(void){
 
 void binary(uint8_t a, uint8_t a_2[8]){
 	
-	for(uint32_t i = 0; i < 8; i++){
+	for(uint32_t ii = 0; ii < 8; ii++){
+		
+		uint8_t i = 7-ii;
 		
 		a_2[i] = a%2;
 		a = a/2;
@@ -70,10 +72,13 @@ void add(uint8_t c[8], uint8_t a[8], uint8_t b[8]){
 	
 	uint8_t carry = 0;
 	
-	for(uint32_t i = 0; i < 8; i++){
+	for(uint32_t ii = 0; ii < 8; ii++){
 		
-		c[i] = (a[i]+b[i]+carry) % 2;
-		carry = (a[i]+b[i]) / 2;
+		uint32_t i = 7-ii;
+		
+		c[i] = a[i]+b[i]+carry;
+		carry = (a[i]+b[i]+carry) / 2;
+		c[i] = c[i]%2;
 	}
 }
 
@@ -82,7 +87,9 @@ void sub(uint8_t d[], uint8_t a[], uint8_t b[]){
 	uint8_t b_1k[8];
 	uint8_t b_2k[8];
 	
-	for(uint32_t i = 0; i < 8; i++){
+	for(uint32_t ii = 0; ii < 8; ii++){
+		
+		uint32_t i = 7-ii;
 		
 		if(b[i] == 1){
 			
@@ -97,18 +104,43 @@ void sub(uint8_t d[], uint8_t a[], uint8_t b[]){
 	uint8_t eins[8] = {0,0,0,0,0,0,0,1};
 	add(b_2k, b_1k, eins);
 	
+	printf("b    = ");
+	
+	for(uint32_t i = 0; i < 8; i++){
+		printf("%u ",b[i]);
+	}
+	
+	printf("\n");
+	
+	printf("b_1k = ");
+	
+	for(uint32_t i = 0; i < 8; i++){
+		printf("%u ",b_1k[i]);
+	}
+	
+	printf("\n");
+	
+	printf("b_2k = ");
+	
+	for(uint32_t i = 0; i < 8; i++){
+		printf("%u ",b_2k[i]);
+	}
+	
+	printf("\n\n");
+	
+	
 	add(d, a, b_2k);
 }
 
 uint8_t dec(uint8_t a_2[]){
 	
-	uint8_t zwei = 2;
+	uint8_t zwei = 128;
 	uint8_t a = 0;
 	
-	for(uint32_t i = 0; i < 8; i--){
+	for(uint32_t i = 0; i < 8; i++){
 		
 		a += a_2[i] * zwei;
-		zwei = zwei*zwei;
+		zwei = zwei/2;
 	}
 	
 	return a;
