@@ -1,7 +1,8 @@
 #include <math.h>
 #include <complex.h>
 
-double f_real(double complex, unsigned int);
+double f_real1(double complex, unsigned int);
+double f_real2(double complex, unsigned int);
 
 int main(void){
 
@@ -9,20 +10,32 @@ int main(void){
     double complex w;
     double ex;
 
+    // relativer Fehler der Vorwärtssummation
     for(unsigned int i=1; i<100; i++){
         z *= i;
-        f_real(z, 16);
         w = cexp(z);
 
-        ex = cabs(f_real(z,25)-creal(w))/cabs(creal(w));
+        ex = cabs(f_real1(z,25)-creal(w))/cabs(creal(w));
 
-        printf("|z| = %e  |z-w| / |w| %e \n", cabs(f_real(z, 25)), ex);
+        printf("|z| = %e  |z-w| / |w| %e \n", cabs(f_real1(z, 25)), ex);
+         z = 0.1 + I*0.1;
+    }
+
+    // relativer Fehler der Rückwärtssummation
+    for(unsigned int i=1; i<100; i++){
+        z *= i;
+        w = cexp(z);
+
+        ex = cabs(f_real2(z,25)-creal(w))/cabs(creal(w));
+
+        printf("|z| = %e  |z-w| / |w| %e \n", cabs(f_real2(z, 25)), ex);
          z = 0.1 + I*0.1;
     }
     return 0;
 }
 
-double f_real(double complex z, unsigned int n){
+// Vorwärtssummation
+double f_real1(double complex z, unsigned int n){
 
     double complex sum = 1.0 + I*0.0;
 	double complex summand = 1.0 + I*0.0;
@@ -35,4 +48,23 @@ double f_real(double complex z, unsigned int n){
 	
 	return creal(sum);
 
+}
+
+// Rückwärtssummation
+double f_real2(double complex z, unsigned int n){
+	
+	double complex sum = 1.0 + I*0.0;
+	double complex summand = 1.0 + I*0.0;
+	
+	for(unsigned int i = n; i > 0; i--){
+		
+		for(unsigned int j = 1; j <= i; j++){
+			
+			summand *= (z/j);
+		}
+		
+		sum += summand;
+		summand = 1.0 + I*0.0;
+	}
+	return sum;
 }

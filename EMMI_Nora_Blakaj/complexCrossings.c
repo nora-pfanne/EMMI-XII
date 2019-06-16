@@ -12,7 +12,7 @@ int main(void){
 	unsigned int h;
 	double complex z;
 	double pi = 3.1415926535897932;
-	unsigned int r = 140;
+	unsigned int r = 4;
 	
 	a = 4;
 	b = -4;
@@ -51,8 +51,9 @@ int main(void){
 		double y = 1.0*r*sin(2.0*pi*abschnitt);
 		
 		z = x + I*y;
-		
-		printf("%lf %lf\n", creal(phi_evaluate(z)), cimag(phi_evaluate(z)));
+		if(cexp(z) == cexp(x+I*0)){
+		    printf("%lf %lf\n", creal(phi_evaluate(z)), cimag(phi_evaluate(z)));
+        }
 	}
 	
 	return 0;
